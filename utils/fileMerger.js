@@ -2,11 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const { isFileAllowed } = require('./fileChecker');
 const { getFormattedFileName } = require('./helpers');
-const { ROOT_PATH, sourcePath } = require('./config');
 
-const mergeFiles = (startPath, basePath, useFormattedName = false) => {
-    const outputFileName = getFormattedFileName(startPath, useFormattedName);
-    const outputPath = path.join(startPath, outputFileName);
+const mergeFiles = (rootPath, sourcePath, useFormattedName = false) => {
+    const outputFileName = getFormattedFileName(rootPath, sourcePath, useFormattedName);
+    console.log('*-* outputFileName', outputFileName);
+    const outputPath = path.join(sourcePath, outputFileName);
     const writeStream = fs.createWriteStream(outputPath);
 
     const readDir = (dir) => {
@@ -16,15 +16,15 @@ const mergeFiles = (startPath, basePath, useFormattedName = false) => {
             const filePath = path.join(dir, file);
             if (fs.statSync(filePath).isDirectory()) {
                 readDir(filePath);
-            } else if (isFileAllowed(filePath, basePath)) {
-                const relativeFilePath = path.relative(basePath, filePath).replace(/\\/g, '/'); // Относительный путь
+            } else if (isFileAllowed(filePath, rootPath)) {
+                const relativeFilePath = path.relative(rootPath, filePath).replace(/\\/g, '/'); // Относительный путь
                 writeStream.write(`\n-------------\nFile: ${relativeFilePath}:\n`);
                 writeStream.write(fs.readFileSync(filePath, 'utf-8') + '\n');
             }
         });
     };
 
-    readDir(startPath);
+    readDir(sourcePath);
     writeStream.end();
 };
 
