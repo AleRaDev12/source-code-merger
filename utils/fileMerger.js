@@ -5,7 +5,7 @@ const { getFormattedFileName } = require('./helpers');
 
 const mergeFiles = (rootPath, sourcePath, useFormattedName = false) => {
     const outputFileName = getFormattedFileName(rootPath, sourcePath, useFormattedName);
-    console.log('*-* outputFileName', outputFileName);
+
     const outputPath = path.join(sourcePath, outputFileName);
     const writeStream = fs.createWriteStream(outputPath);
 
