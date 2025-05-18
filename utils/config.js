@@ -15,7 +15,7 @@ module.exports = {
         },
         blackList: {
             files: [
-                process.env.BLACKLIST_FILES
+                ...process.env.BLACKLIST_FILES
                     .split(',')
                     .map(s => s.trim())
                     .filter(s => !!s),
